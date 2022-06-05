@@ -17,8 +17,6 @@ app.get('/getAll', (req, res) => {
 
 
 app.post('/insert', (req, res) => {
-    console.log(req.body.name)
-    console.log(req.body.price)
 
     let data = new Books({
         name: req.body.name,
@@ -28,9 +26,7 @@ app.post('/insert', (req, res) => {
     Books.saveBooks(data, (err) => {
         if (err) { console.log(err) }
         else {
-            res.json({
-                message: 'task successfully Insert',
-            });
+            res.json({ message: 'task successfully Insert', });
         }
     })
 })
@@ -39,9 +35,7 @@ app.post('/insert', (req, res) => {
 app.post('/getBook', (req, res) => {
     let Books_id = req.body.id;
 
-    Books.findOne({ _id: Books_id }).exec((err, tasks) => {
-        res.json(tasks);
-    })
+    Books.findOne({ _id: Books_id }).exec((err, tasks) => { res.json(tasks); })
 
 })
 
@@ -49,14 +43,9 @@ app.post('/getBook', (req, res) => {
 app.post('/delete', (req, res) => {
 
     const Books_id = req.body.id
-
     Books.findByIdAndDelete(Books_id, { useFindAndModify: false }).exec(err => {
         if (err) { console.log(err) }
-        else {
-            res.json({
-                message: 'task successfully Delete',
-            });
-        }
+        else { res.json({ message: 'task successfully Delete', }); }
 
     })
 })
@@ -71,11 +60,7 @@ app.post('/update', (req, res) => {
 
     Books.findByIdAndUpdate(Books_id, data, { useFindAndModify: false }).exec(err => {
         if (err) { console.log(err) }
-        else {
-            res.json({
-                message: 'task successfully Update',
-            });
-        }
+        else { res.json({ message: 'task successfully Update', }); }
     })
 })
 
