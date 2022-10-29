@@ -1,7 +1,7 @@
-const checkinMssql = require('../../utils/mssql/checkin.mssql');
-const checkinHistoryMssql = require('../../utils/mssql/checkinhistory.mssql');
+const checkinMssql = require('../mssql/checkin.mssql');
 
-class checkinService {
+
+class Service {
   
   async get(req) {
     try {
@@ -367,7 +367,7 @@ class checkinService {
         _data[i].HistoryList = outputHistory.recordset;
       }
 
-      res.data = _data
+      res.data = _data 
       res.message = outputData.pMessage
 
       return res;
@@ -378,4 +378,4 @@ class checkinService {
   }
 }
 
-module.exports = new checkinService();
+module.exports = new Service();
