@@ -1,0 +1,35 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-smra
+  namespace: dev-smra
+  labels:
+    service-name: ingress-smra
+  annotations:
+    kubernetes.io/tls-acme: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: 50M
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - "devsmra.sritranggroup.com"
+      secretName: secret-ssl-smra-dev
+  rules:
+    - host: "devsmra.sritranggroup.com"
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: service-smra-frontend
+              servicePort: 80
+    - host: "devsmra.sritranggroup.com"
+      http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              serviceName: service-smra-backend
+              servicePort: 8080

@@ -1,0 +1,74 @@
+trigger:
+- develop
+
+resources:
+- repo: self
+
+variables:
+  # Container registry service connection established during pipeline creation
+  appName: 'STGT-SmartReceiveAPI'
+  azureSubscription: '22eb2a91-b6d1-4309-bfca-86e3ae3b9742'
+  dockerRegistryServiceConnection: '4766918f-efb7-4058-9ee9-071c91239deb'
+  imageRepository: 'stgtsmartreceiveapi' #buildId
+  # imageRepository: 'sritrangsmartreceive'
+  containerRegistry: 'stgtsmartreceive.azurecr.io'
+  dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
+  tag: '$(Build.BuildId)'
+  # tag: 'latest'
+
+  # Agent VM image name
+  vmImageName: 'ubuntu-20.04'
+
+stages:
+- stage: Build
+  displayName: Build and push stage
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    #Build and Push
+    - task: Docker@2
+      displayName: Build and push an image to container registry
+      inputs:
+        command: buildAndPush
+        repository: $(imageRepository)
+        dockerfile: $(dockerfilePath)
+        containerRegistry: $(dockerRegistryServiceConnection)
+        tags: |
+          $(tag)
+
+    # Copy Artifacts
+    - task: CopyFiles@2
+      inputs:
+        targetFolder: '$(Build.ArtifactStagingDirectory)'
+
+    # Publish
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: 'drop'
+        publishLocation: 'Container'
+
+    # Deploy
+    # - task: AzureWebAppContainer@1
+    #   displayName: 'Azure Web App on Container Deploy'
+    #   inputs:
+    #     azureSubscription: $(azureSubscription)
+    #     appName: $(appName)
+    #     imageName: $(containerRegistry)/$(imageRepository):$(tag)
+
+    # Docker
+    #- task: DockerCompose@0
+    #  inputs:
+    #    containerregistrytype: 'Azure Container Registry'
+    #    azureSubscription: 'Sritrang Smart Receive (Azure Resource Manager)'
+    #    azureContainerRegistry: '{"loginServer":"stgtsmartreceive.azurecr.io", "id" : "/subscriptions/22eb2a91-b6d1-4309-bfca-86e3ae3b9742/resourceGroups/STGT-SmartReceive/providers/Microsoft.ContainerRegistry/registries/stgtsmartreceive"}'
+    #    dockerComposeFile: '**/docker-compose.yml'
+    #    additionalDockerComposeFiles: '**/docker-compose-prod.yml'
+    #    dockerComposeFileArgs: '##'
+    #    action: 'Run a Docker Compose command'
+    #    dockerComposeCommand: 'docker-compose up -d'
+    # Build and push an image to Azure Container Registry
+    # https://docs.microsoft.com/azure/devops/pipelines/languages/docker
