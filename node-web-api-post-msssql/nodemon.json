@@ -1,8 +1,0 @@
-{
-    "verbose": true,
-    "watch": [
-        "src"
-    ],
-    "ext":"js",
-    "exec":"npm run mon-dev"
-}
