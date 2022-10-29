@@ -3,7 +3,7 @@ const router = express.Router({
   mergeParams: true
 });
 
-const checkinController = require('../controllers/master/checkin.controller');
+const checkinController = require('../controllers/checkin.controller');
 
 router.route('/get').post(checkinController.get);
 router.route('/post').post(checkinController.post);

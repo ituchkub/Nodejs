@@ -1,4 +1,4 @@
-const checkinService = require('../../services/master/checkin.service');
+const checkinService = require('../services/master/checkin.service');
 
 class checkinController {
   async get(req, res) {
