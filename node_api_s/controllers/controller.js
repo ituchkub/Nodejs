@@ -11,6 +11,9 @@ class Controller {
   } 
   async AxiosEx(req, res) {
     res.send(await Service.AxiosEx(req));
+  }  
+  async WFile(req, res) {
+    res.send(await Service.WFile(req));
   }
 }
 module.exports = new Controller();
